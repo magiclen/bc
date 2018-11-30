@@ -1,0 +1,52 @@
+bc (An arbitrary precision calculator language)
+====================
+
+[![Build Status](https://travis-ci.org/magiclen/bc.svg?branch=master)](https://travis-ci.org/magiclen/bc)
+
+Use `bc` in the Rust Programming Language.
+
+## Examples
+
+```rust
+#[macro_use] extern crate bc;
+
+let result = bc!("2 + 6");
+
+assert_eq!("8", result.unwrap());
+```
+
+```rust
+#[macro_use] extern crate bc;
+
+let result = bc!("2.5 + 6");
+
+assert_eq!("8.5", result.unwrap());
+```
+
+```rust
+#[macro_use] extern crate bc;
+
+let result = bc_timeout!("99^99");
+
+assert_eq!("369729637649726772657187905628805440595668764281741102430259972423552570455277523421410650010128232727940978889548326540119429996769494359451621570193644014418071060667659301384999779999159200499899", result.unwrap());
+```
+
+```rust
+#[macro_use] extern crate bc;
+
+let result = bc_timeout!(20, "99^99");
+
+assert_eq!("369729637649726772657187905628805440595668764281741102430259972423552570455277523421410650010128232727940978889548326540119429996769494359451621570193644014418071060667659301384999779999159200499899", result.unwrap());
+```
+
+## Crates.io
+
+https://crates.io/crates/bc
+
+## Documentation
+
+https://docs.rs/bc
+
+## License
+
+[MIT](LICENSE)
