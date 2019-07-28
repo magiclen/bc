@@ -10,8 +10,9 @@ description= "Use `bc` in the Rust Programming Language."
 readme = "README.md"
 license = "MIT"
 
-[badges]
-travis-ci = { repository = "magiclen/bc", branch = "master" }
+[badges.travis-ci]
+repository = "magiclen/bc"
+branch = "master"
 
 [dependencies]
 subprocess = "0.1.13"
