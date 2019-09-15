@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate bc;
 
-
 #[test]
 fn add() {
     let result = bc!("1+1").unwrap();

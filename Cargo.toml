@@ -1,7 +1,8 @@
 [package]
 name = "bc"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Magic Len <len@magiclen.org>"]
+edition = "2018"
 repository = "https://github.com/magiclen/bc"
 homepage = "https://magiclen.org/bc"
 keywords = ["bc", "timeout", "math", "parse", "equation"]
@@ -15,4 +16,4 @@ repository = "magiclen/bc"
 branch = "master"
 
 [dependencies]
-subprocess = "0.1.13"
+subprocess = "0.1.18"
