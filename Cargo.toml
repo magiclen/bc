@@ -7,7 +7,7 @@ repository = "https://github.com/magiclen/bc"
 homepage = "https://magiclen.org/bc"
 keywords = ["bc", "timeout", "math", "parse", "equation"]
 categories = ["science"]
-description= "Use `bc` in the Rust Programming Language."
+description = "Use `bc` in the Rust Programming Language."
 readme = "README.md"
 license = "MIT"
 
