@@ -1,6 +1,9 @@
 #[macro_use]
 extern crate bc;
 
+#[macro_use]
+extern crate assert_approx_eq;
+
 #[test]
 fn add() {
     let result = bc!("1+1").unwrap();
@@ -26,14 +29,14 @@ fn multiply() {
 fn divide() {
     let result = bc!("5/2").unwrap();
 
-    assert_eq!(2.5, result.parse::<f64>().unwrap());
+    assert_approx_eq!(2.5, result.parse::<f64>().unwrap());
 }
 
 #[test]
 fn power() {
     let result = bc!("2^100").unwrap();
 
-    assert_eq!(1267650600228229401496703205376, result.parse::<i128>().unwrap());
+    assert_eq!(1_267_650_600_228_229_401_496_703_205_376, result.parse::<i128>().unwrap());
 }
 
 #[test]
