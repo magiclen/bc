@@ -1,6 +1,6 @@
 [package]
 name = "bc"
-version = "0.1.4"
+version = "0.1.5"
 authors = ["Magic Len <len@magiclen.org>"]
 edition = "2018"
 repository = "https://github.com/magiclen/bc"
@@ -16,7 +16,7 @@ repository = "magiclen/bc"
 branch = "master"
 
 [dependencies]
-subprocess = "0.1.18"
+subprocess = "0.2.4"
 
 [dev-dependencies]
 assert_approx_eq = "1.1"
