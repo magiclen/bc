@@ -40,6 +40,8 @@ assert_eq!("36972963764972677265718790562880544059566876428174110243025997242355
 
 pub extern crate subprocess;
 
+use std::error::Error;
+use std::fmt::{Display, Error as FmtError, Formatter};
 use std::path::Path;
 
 use subprocess::{Exec, ExitStatus, PopenError, Redirection};
@@ -66,6 +68,20 @@ impl From<String> for BCError {
         BCError::Error(err)
     }
 }
+
+impl Display for BCError {
+    #[inline]
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), FmtError> {
+        match self {
+            BCError::PopenError(err) => Display::fmt(err, f),
+            BCError::NoResult => f.write_str("There is no result of BC."),
+            BCError::Timeout => f.write_str("The BC calculation has timed out."),
+            BCError::Error(text) => f.write_str(text.as_str()),
+        }
+    }
+}
+
+impl Error for BCError {}
 
 /// Call `bc`.
 pub fn bc<P: AsRef<Path>, S: AsRef<str>>(bc_path: P, statement: S) -> Result<String, BCError> {
