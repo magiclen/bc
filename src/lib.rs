@@ -38,27 +38,29 @@ assert_eq!("36972963764972677265718790562880544059566876428174110243025997242355
 ```
 */
 
-pub extern crate subprocess;
+extern crate execute;
 
 use std::error::Error;
 use std::fmt::{Display, Error as FmtError, Formatter};
+use std::io;
 use std::path::Path;
+use std::process::{Command, Stdio};
 
-use subprocess::{Exec, ExitStatus, PopenError, Redirection};
+use execute::Execute;
 
 #[derive(Debug)]
 pub enum BCError {
-    PopenError(PopenError),
+    IOError(io::Error),
     NoResult,
     Timeout,
     /// Maybe it is a syntax error.
     Error(String),
 }
 
-impl From<PopenError> for BCError {
+impl From<io::Error> for BCError {
     #[inline]
-    fn from(err: PopenError) -> Self {
-        BCError::PopenError(err)
+    fn from(err: io::Error) -> Self {
+        BCError::IOError(err)
     }
 }
 
@@ -73,7 +75,7 @@ impl Display for BCError {
     #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), FmtError> {
         match self {
-            BCError::PopenError(err) => Display::fmt(err, f),
+            BCError::IOError(err) => Display::fmt(err, f),
             BCError::NoResult => f.write_str("There is no result of BC."),
             BCError::Timeout => f.write_str("The BC calculation has timed out."),
             BCError::Error(text) => f.write_str(text.as_str()),
@@ -85,27 +87,22 @@ impl Error for BCError {}
 
 /// Call `bc`.
 pub fn bc<P: AsRef<Path>, S: AsRef<str>>(bc_path: P, statement: S) -> Result<String, BCError> {
-    let process = Exec::cmd(bc_path.as_ref().as_os_str())
-        .arg("-l")
-        .arg("-q")
-        .stdin(format!("{}\n", statement.as_ref()).as_str())
-        .stdout(Redirection::Pipe)
-        .stderr(Redirection::Pipe);
+    let mut command = Command::new(bc_path.as_ref());
+    command.args(&["-l", "-q"]);
 
-    let capture = process.capture()?;
+    command.stdout(Stdio::piped());
+    command.stderr(Stdio::piped());
 
-    let stderr = capture.stderr_str();
+    let output = command.execute_input_output(format!("{}\n", statement.as_ref()).as_bytes())?;
 
-    if stderr.is_empty() {
-        let stdout = capture.stdout_str();
-
-        if stdout.is_empty() {
+    if output.stderr.is_empty() {
+        if output.stdout.is_empty() {
             Err(BCError::NoResult)
         } else {
-            Ok(handle_output(stdout))
+            Ok(handle_output(unsafe { String::from_utf8_unchecked(output.stdout) }))
         }
     } else {
-        Err(BCError::Error(handle_output(stderr)))
+        Err(BCError::Error(handle_output(unsafe { String::from_utf8_unchecked(output.stderr) })))
     }
 }
 
@@ -116,48 +113,37 @@ pub fn bc_timeout<PT: AsRef<Path>, P: AsRef<Path>, S: AsRef<str>>(
     bc_path: P,
     statement: S,
 ) -> Result<String, BCError> {
-    let process = Exec::cmd(timeout_path.as_ref().as_os_str())
-        .arg(format!("{}s", timeout_secs))
-        .arg(bc_path.as_ref().as_os_str())
-        .arg("-l")
-        .arg("-q")
-        .stdin(format!("{}\n", statement.as_ref()).as_str())
-        .stdout(Redirection::Pipe)
-        .stderr(Redirection::Pipe);
+    let mut command = Command::new(timeout_path.as_ref());
+    command.arg(format!("{}s", timeout_secs)).arg(bc_path.as_ref()).args(&["-l", "-q"]);
 
-    let capture = process.capture()?;
+    command.stdout(Stdio::piped());
+    command.stderr(Stdio::piped());
 
-    if let ExitStatus::Exited(status) = capture.exit_status {
-        if status == 124 {
+    let output = command.execute_input_output(format!("{}\n", statement.as_ref()).as_bytes())?;
+
+    if let Some(code) = output.status.code() {
+        if code == 124 {
             return Err(BCError::Timeout);
         }
     }
 
-    let stderr = capture.stderr_str();
-
-    if stderr.is_empty() {
-        let stdout = capture.stdout_str();
-
-        if stdout.is_empty() {
+    if output.stderr.is_empty() {
+        if output.stdout.is_empty() {
             Err(BCError::NoResult)
         } else {
-            Ok(handle_output(stdout))
+            Ok(handle_output(unsafe { String::from_utf8_unchecked(output.stdout) }))
         }
     } else {
-        Err(BCError::Error(handle_output(stderr)))
+        Err(BCError::Error(handle_output(unsafe { String::from_utf8_unchecked(output.stderr) })))
     }
 }
 
-fn handle_output(output: String) -> String {
-    let len = output.len();
+fn handle_output(mut output: String) -> String {
+    let length = output.len();
 
-    let mut output = output.into_bytes();
-
-    let output = unsafe {
-        output.set_len(len - 1);
-
-        String::from_utf8_unchecked(output)
-    };
+    unsafe {
+        output.as_mut_vec().set_len(length - 1);
+    }
 
     match output.find("\\\n") {
         Some(index) => {
