@@ -38,13 +38,14 @@ assert_eq!("36972963764972677265718790562880544059566876428174110243025997242355
 ```
 */
 
+#[macro_use]
 extern crate execute;
 
 use std::error::Error;
 use std::fmt::{Display, Error as FmtError, Formatter};
 use std::io;
 use std::path::Path;
-use std::process::{Command, Stdio};
+use std::process::Stdio;
 
 use execute::Execute;
 
@@ -87,8 +88,7 @@ impl Error for BCError {}
 
 /// Call `bc`.
 pub fn bc<P: AsRef<Path>, S: AsRef<str>>(bc_path: P, statement: S) -> Result<String, BCError> {
-    let mut command = Command::new(bc_path.as_ref());
-    command.args(&["-l", "-q"]);
+    let mut command = command_args!(bc_path.as_ref(), "-l", "-q");
 
     command.stdout(Stdio::piped());
     command.stderr(Stdio::piped());
@@ -113,8 +113,13 @@ pub fn bc_timeout<PT: AsRef<Path>, P: AsRef<Path>, S: AsRef<str>>(
     bc_path: P,
     statement: S,
 ) -> Result<String, BCError> {
-    let mut command = Command::new(timeout_path.as_ref());
-    command.arg(format!("{}s", timeout_secs)).arg(bc_path.as_ref()).args(&["-l", "-q"]);
+    let mut command = command_args!(
+        timeout_path.as_ref(),
+        format!("{}s", timeout_secs),
+        bc_path.as_ref(),
+        "-l",
+        "-q"
+    );
 
     command.stdout(Stdio::piped());
     command.stderr(Stdio::piped());
