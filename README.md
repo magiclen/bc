@@ -1,7 +1,7 @@
 bc (An arbitrary precision calculator language)
 ====================
 
-[![Build Status](https://travis-ci.org/magiclen/bc.svg?branch=master)](https://travis-ci.org/magiclen/bc)
+[![CI](https://github.com/magiclen/bc/actions/workflows/ci.yml/badge.svg)](https://github.com/magiclen/bc/actions/workflows/ci.yml)
 
 Use `bc` in the Rust Programming Language.
 
