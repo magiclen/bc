@@ -1,8 +1,5 @@
-#[macro_use]
-extern crate bc;
-
-#[macro_use]
-extern crate assert_approx_eq;
+use assert_approx_eq::assert_approx_eq;
+use bc::{bc, bc_timeout};
 
 #[test]
 fn add() {
