@@ -18,6 +18,8 @@ jobs:
         toolchain:
           - stable
           - nightly
+        features:
+          -
     name: Test ${{ matrix.toolchain }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
@@ -27,6 +29,5 @@ jobs:
           profile: minimal
           toolchain: ${{ matrix.toolchain }}
           override: true
-      - run: cargo build --release
-      - run: cargo test --release
-      - run: cargo doc --release
+      - run: cargo test --release ${{ matrix.features }}
+      - run: cargo doc --release ${{ matrix.features }}
