@@ -1,4 +1,4 @@
-use assert_approx_eq::assert_approx_eq;
+use assert_eq_float::assert_eq_float;
 use bc::{bc, bc_timeout};
 
 #[test]
@@ -26,7 +26,7 @@ fn multiply() {
 fn divide() {
     let result = bc!("5/2").unwrap();
 
-    assert_approx_eq!(2.5, result.parse::<f64>().unwrap());
+    assert_eq_float!(2.5, result.parse::<f64>().unwrap());
 }
 
 #[test]

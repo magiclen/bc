@@ -1,6 +1,6 @@
 [package]
 name = "bc"
-version = "0.1.13"
+version = "0.1.14"
 authors = ["Magic Len <len@magiclen.org>"]
 edition = "2021"
 repository = "https://github.com/magiclen/bc"
@@ -8,7 +8,6 @@ homepage = "https://magiclen.org/bc"
 keywords = ["bc", "timeout", "math", "parse", "equation"]
 categories = ["science"]
 description = "Use `bc` in the Rust Programming Language."
-readme = "README.md"
 license = "MIT"
 include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE"]
 
@@ -16,4 +15,4 @@ include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE"]
 execute = "0.2.4"
 
 [dev-dependencies]
-assert_approx_eq = "1.1"
+assert-eq-float = "0.1"

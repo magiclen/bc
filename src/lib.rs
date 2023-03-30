@@ -30,11 +30,13 @@ assert_eq!("36972963764972677265718790562880544059566876428174110243025997242355
 ```
 */
 
-use std::error::Error;
-use std::fmt::{Display, Error as FmtError, Formatter};
-use std::io;
-use std::path::Path;
-use std::process::Stdio;
+use std::{
+    error::Error,
+    fmt::{Display, Error as FmtError, Formatter},
+    io,
+    path::Path,
+    process::Stdio,
+};
 
 use execute::{command_args, Execute};
 
@@ -146,7 +148,7 @@ fn handle_output(mut output: String) -> String {
             s.push_str(&output[(index + 2)..].replace("\\\n", ""));
 
             s
-        }
+        },
         None => output,
     }
 }
