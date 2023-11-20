@@ -16,7 +16,7 @@ jobs:
         os:
           - ubuntu-latest
         toolchain:
-          - 1.56
+          - 1.65
           - stable
           - nightly
         features:
