@@ -1,9 +1,9 @@
 [package]
 name = "bc"
-version = "0.1.15"
+version = "0.1.16"
 authors = ["Magic Len <len@magiclen.org>"]
 edition = "2021"
-rust-version = "1.65"
+rust-version = "1.80"
 repository = "https://github.com/magiclen/bc"
 homepage = "https://magiclen.org/bc"
 keywords = ["bc", "timeout", "math", "parse", "equation"]
