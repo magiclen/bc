@@ -13,7 +13,7 @@ license = "MIT"
 include = ["src/**/*", "Cargo.toml", "README.md", "LICENSE"]
 
 [dependencies]
-execute = "0.2"
+execute = "0.2.4"
 
 [dev-dependencies]
 assert-eq-float = "0.1"
